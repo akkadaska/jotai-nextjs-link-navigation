@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Link from 'next/link';
+import { Provider } from 'jotai';
+import { HydrationBoundary } from 'jotai-ssr';
+import { globalAtom } from '@/atom/atom';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +19,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <Provider>
+      <HydrationBoundary hydrateAtoms={[[globalAtom, `Hydrated in RootLayout at ${new Date().toLocaleString()}`]]}>
+        <html lang="en">
+          <body className={inter.className}>
+          <Link href="/use-hydrate-atom/a"><span className='text-blue-500 underline hover:text-blue-700 mx-2'>/use-hydrate-atom/a</span></Link>
+          <Link href="/use-hydrate-atom/b"><span className='text-blue-500 underline hover:text-blue-700 mx-2'>/use-hydrate-atom/b</span></Link>
+          <Link href="/hydration-boundary/m"><span className='text-blue-500 underline hover:text-blue-700 mx-2'>/hydration-boundary/m</span></Link>
+          <Link href="/hydration-boundary/n"><span className='text-blue-500 underline hover:text-blue-700 mx-2'>/hydration-boundary/n</span></Link>
+          <Link href="/hydration-boundary-with-rendering-boundary/x"><span className='text-blue-500 underline hover:text-blue-700 mx-2'>/hydration-boundary-with-rendering-boundary/x</span></Link>
+          <Link href="/hydration-boundary-with-rendering-boundary/y"><span className='text-blue-500 underline hover:text-blue-700 mx-2'>/hydration-boundary-with-rendering-boundary/y</span></Link>
+          {children}</body>
+        </html>
+      </HydrationBoundary>
+    </Provider>
+    
   );
 }
